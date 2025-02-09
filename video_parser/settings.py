@@ -121,18 +121,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": env("AWS_ACCESS_KEY_ID"),
+            "secret_key": env("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": env("AWS_STORAGE_BUCKET_NAME"), 
+            "region_name": env("AWS_REGION_NAME"),
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": env("AWS_ACCESS_KEY_ID"),
+            "secret_key": env("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": env("AWS_STORAGE_BUCKET_NAME"),  
+            "region_name": env("AWS_REGION_NAME"),
+        },
     },
 }
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
+AWS_REGION_NAME = env('AWS_REGION_NAME')
 
 CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 # CELERY_RESULT_BACKEND = env('CELERY_BROKER_URL')
 
-DYNAMODB = boto3.resource('dynamodb', region_name=AWS_S3_REGION_NAME)
+DYNAMODB = boto3.resource('dynamodb', region_name=AWS_REGION_NAME)
 
 
