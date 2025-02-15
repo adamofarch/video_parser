@@ -1,7 +1,0 @@
-__pycache__
-.env
-venv
-Temp/*
-dump.rdb
-db.sqlite3
-
