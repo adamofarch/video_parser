@@ -7,4 +7,5 @@ dump.rdb
 
 venv/
 db.sqlite3
-
+staticfiles/
+mediafiles/

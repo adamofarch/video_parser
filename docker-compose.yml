@@ -38,7 +38,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   postgres_database:
-    container_name: backend-db
+    container_name: parser-db
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
