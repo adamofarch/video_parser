@@ -1,19 +1,14 @@
-import environ
+import dotenv
+import dj_database_url
 from pathlib import Path
 import boto3
+import os
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / '.env')
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+dotenv.read_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-mypbrhp0ru9^gdzx9!rj4(r82_9e1owg($1-udatxj0fkv5@$*'
@@ -69,12 +64,11 @@ WSGI_APPLICATION = 'video_parser.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable not set")
+
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
 
 
 # Password validation
@@ -107,47 +101,50 @@ USE_I18N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "access_key": env("AWS_ACCESS_KEY_ID"),
-            "secret_key": env("AWS_SECRET_ACCESS_KEY"),
-            "bucket_name": env("AWS_STORAGE_BUCKET_NAME"), 
-            "region_name": env("AWS_REGION_NAME"),
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "access_key": env("AWS_ACCESS_KEY_ID"),
-            "secret_key": env("AWS_SECRET_ACCESS_KEY"),
-            "bucket_name": env("AWS_STORAGE_BUCKET_NAME"),  
-            "region_name": env("AWS_REGION_NAME"),
-        },
-    },
-}
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "storages.backends.s3.S3Storage",
+#         "OPTIONS": {
+#             "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+#             "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+#             "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"), 
+#             "region_name": os.getenv("AWS_REGION_NAME"),
+#         },
+#     },
+#     "staticfiles": {
+#         "BACKEND": "storages.backends.s3.S3Storage",
+#         "OPTIONS": {
+#             "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+#             "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+#             "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),  
+#             "region_name": os.getenv("AWS_REGION_NAME"),
+#         },
+#     },
+# }
 
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_REGION_NAME = env('AWS_REGION_NAME')
+# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+# AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
 
 CELERY_TIMEZONE = 'Asia/Kolkata'
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-# CELERY_RESULT_BACKEND = env('CELERY_BROKER_URL')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+# CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL')
 
-DYNAMODB = boto3.resource('dynamodb', region_name=AWS_REGION_NAME)
+# DYNAMODB = boto3.resource('dynamodb', region_name=AWS_REGION_NAME)
 
 

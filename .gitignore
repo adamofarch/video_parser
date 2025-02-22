@@ -4,4 +4,6 @@ venv
 Temp/*
 dump.rdb
 db.sqlite3
+staticfiles
+mediafiles/
 

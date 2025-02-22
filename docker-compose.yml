@@ -1,0 +1,65 @@
+x-video_parser: &video_parser
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      DOCKER_BUILDKIT: 1
+  volumes:
+    - .:/app
+    - ./Temp/:/app/Temp/
+  environment:
+    - DATABASE_URL=postgresql://admin:postgres@postgres_database:5432/test_db
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  env_file:
+    - .env
+
+services:
+  parser_django:
+    container_name: backend
+    <<: *video_parser
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_database
+      - redis
+    networks:
+      - backend-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres_database:
+    container_name: parser-db
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+
+    networks:
+      - backend-network
+
+
+networks:
+  backend-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+
