@@ -5,7 +5,12 @@
 <div class="container my-5 text-center">
   <h1>Search Result:</h1> 
   <br>
-  <h1>{{result}}</h1>
+  <br>
+  {% for result in search_result %}
+    <h1>TimeStamp: {{result.timestamp}}</h1>
+    <h1>Text: {{result.text}}</h1>
+    <h1>Index: {{result.index}}</h1>
+  {% endfor %}
 </div>
 
 {% endblock %}

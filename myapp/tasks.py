@@ -20,3 +20,8 @@ def save_vid(vid_file_name, serialized_data):
     vid = Vid()
     vid.vid_file.save(vid_file_name, ContentFile(serialized_data))
     vid.save()
+
+@shared_task
+def translate_subs(subtitle_path):
+    pass
+
