@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM archlinux:latest
 
 ENV PYTHONUNBUFFERED 1
 
@@ -6,35 +6,41 @@ ENV PYTHONUNBUFFERED 1
 ARG BUILDKIT_INLINE_CACHE=1
 
 # Combine RUN commands and use mount cache for apt and pip
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  apt-get update && apt-get install -y \
-  build-essential \
+RUN pacman -Sy --noconfirm && \
+  pacman -S --noconfirm \
+  base-devel \
   cmake \
   pkg-config \
-  # CCExtractor dependencies
-  libglfw3-dev \
-  libglfw3 \
-  tesseract-ocr \
-  # tesseract-dev \
-  libleptonica-dev \
-  libcurl4-gnutls-dev \
-  libglib2.0-dev \
-  # PostgreSQL client
-  libpq-dev \
-  postgresql-client \
-  # Utilities
+  ffmpeg \
+  tesseract \
+  leptonica \
+  curl \
+  glib2 \
+  gpac \
+  postgresql-libs \
+  postgresql \
   git \
   wget \
-  && rm -rf /var/lib/apt/lists/* \
-  && wget https://github.com/CCExtractor/ccextractor/releases/download/v0.94/ccextractor_minimal.tar.gz \
-  && apt-get install -y tar \
-  && tar -xvf ccextractor_minimal.tar.gz \
-  && mv ccextractor /usr/local/bin/ \
-  && rm ccextractor_minimal.tar.gz \
-  && apt-get remove -y wget \
-  && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/*
+  python \
+  python-pip 
+
+RUN useradd -m -s /bin/bash builder && \
+  echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Switch to the non-root user
+USER builder
+WORKDIR /home/builder
+
+RUN sudo pacman -S --noconfirm --needed git base-devel && \
+  git clone https://aur.archlinux.org/yay.git /tmp/yay && \
+  cd /tmp/yay && \
+  makepkg -si --noconfirm && \
+  cd / && \
+  sudo rm -rf /tmp/yay
+
+RUN yay -S --noconfirm ccextractor
+
+USER root
 
 WORKDIR /app
 
@@ -42,7 +48,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-  pip install -r requirements.txt
+  pip install --break-system-packages -r requirements.txt
 
 COPY . .
 

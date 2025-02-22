@@ -3,7 +3,7 @@ from django.conf import settings
 import boto3
 from boto3.dynamodb.conditions import Attr
 from .forms import Vid_Form, search_query_form
-from .tasks import process_vid, save_vid_to_s3_bucket
+from .tasks import process_vid, save_vid
 import os
 
 def index(request):
@@ -14,6 +14,7 @@ def index(request):
             vid_file = form.cleaned_data['vid_file']
             vid_name = vid_file.name
             vid_serialized_data = vid_file.read()
+            os.makedirs(os.path.join(settings.BASE_DIR, 'Temp/'), exist_ok=True)
             vid_path = os.path.join(os.path.join(settings.BASE_DIR, 'Temp/'), vid_name)
             # Saving the video file locally for ccextractor binary to be executed
             if not os.path.exists(vid_path):
@@ -23,7 +24,7 @@ def index(request):
                 data.close()
             request.session['video_name'] = vid_name
             # processing the video asynchronously to reduce the HTTP Request Time
-            save_vid_to_s3_bucket.delay(vid_name, vid_serialized_data)
+            save_vid.delay(vid_name, vid_serialized_data)
             process_vid.delay(vid_path)
             return redirect('success')
     
@@ -43,7 +44,7 @@ def index(request):
             
             return render(request, 'search.html', {'search_form': search_form, 'result': search_result})
 
-    context = {'form': form, 'search_form': search_form}
+    context = {'form': form, 'search_form': search_form, 'video_name': request.session.get('video_name')}
     return render(request, 'index.html', context)
 
 def success(request):

@@ -1,7 +1,7 @@
 __pycache__/
 .env
 venv
-Temp/*
+Temp/
 dump.rdb
 db.sqlite3
 staticfiles

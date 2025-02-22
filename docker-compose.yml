@@ -6,7 +6,6 @@ x-video_parser: &video_parser
       DOCKER_BUILDKIT: 1
   volumes:
     - .:/app
-    - ./Temp/:/app/Temp/
   environment:
     - DATABASE_URL=postgresql://admin:postgres@postgres_database:5432/test_db
   extra_hosts:
