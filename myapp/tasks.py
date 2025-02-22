@@ -11,7 +11,7 @@ def process_vid(vid_path):
     vid_name = os.path.basename(vid_path)[:-4]
     command = ['ccextractor', vid_path, '-o', sub_path]
     response = subprocess.run(command, check=True)
-    # os.remove(vid_path)
+    os.remove(vid_path)
     return response.stdout
     # Cleaning up the locally stored files 
 

@@ -52,6 +52,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . .
 
+RUN mkdir -p /app/Temp
+RUN chown -R builder:builder /app/Temp
+RUN chmod -R 777 /app/Temp
+
 RUN cp .env.example .env
 
 COPY entrypoint.sh /entrypoint.sh
