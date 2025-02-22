@@ -1,0 +1,10 @@
+# PROCESSING
+
+Temp/*
+dump.rdb
+
+# ENVIRONMENT AND DBs
+
+venv/
+db.sqlite3
+
