@@ -1,44 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Parser</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <title>Video Parser Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes gradient-wave {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          transitionProperty: {
+            'width': 'width',
+            'shadow': 'shadow'
+          }
+        }
+      }
+    };
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.classList.toggle('dark');
+      const isDark = html.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      document.getElementById('theme-icon').textContent = theme === 'dark' ? '☀️' : '🌙';
+    });
+
+    function toggleSubtitleDropdown() {
+      const subtitleDropdown = document.getElementById('subtitleDropdown');
+      subtitleDropdown.classList.toggle('hidden', document.getElementById('fileInput').files.length === 0);
+      document.getElementById('downloadBtn').classList.add('hidden');
+    }
+
+    function showDownloadButton() {
+      const downloadBtn = document.getElementById('downloadBtn');
+      downloadBtn.classList.remove('hidden');
+      downloadBtn.classList.add('animate-fade-in-up');
+    }
+  </script>
 </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg bg-info">
-    <div class="container-fluid">
-      <a class="navbar-brand text-center" href="#">Video_Parser</a>
-      <form class="d-flex" method="get">
-        {{search_form.search_query}}
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+<body class="bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-all duration-500 ease-in-out font-inter">
+  <nav class="sticky top-4 mx-4 backdrop-blur-lg bg-white/50 dark:bg-gray-900/50 p-4 rounded-2xl shadow-xl dark:shadow-cyan-600/20 transition-all duration-500 z-50">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <a href="#" class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-cyan-400 dark:to-blue-300">VideoParser Pro</a>
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <input type="text" placeholder="Search videos..." class="w-full px-4 py-2 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 dark:focus:ring-cyan-400/50 transition-all duration-300 shadow-sm" />
+        <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm hover:shadow-md dark:shadow-cyan-500/60 hover:scale-105 transition-all duration-300">
+          <span id="theme-icon" class="text-xl">🌙</span>
+        </button>
+      </div>
     </div>
   </nav>
-  {% block content %}
-  <div class="container">
-    <div class="d-flex justify-content-center align-items-center my-5">
-      <h1> Upload a Video File </h1>
-    </div>
-    <div class="d-flex justify-content-center align-items-center my-5">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <div class="d-flex justify-content-center align-items-center">
-          <button type="submit" class="btn btn-primary">Submit</button>
+
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <section class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl dark:shadow-gray-900/30 transition-all duration-500 hover:shadow-3xl hover:dark:shadow-cyan-500/40">
+      <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-cyan-400 dark:to-blue-300 mb-4">Video Processing Made Simple</h1>
+        <p class="text-gray-600 dark:text-gray-400 text-lg">Transform your videos with AI-powered tools</p>
+      </div>
+
+      <div class="space-y-6">
+        <input type="text" id="videoURL" placeholder="Paste video URL here..." class="w-full px-5 py-3 rounded-xl bg-white dark:bg-gray-900/50 border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-purple-500 dark:focus:border-cyan-400 focus:ring-2 focus:ring-purple-500/30 dark:focus:ring-cyan-400/30 transition-all duration-300" />
+
+        <div id="drop-area" class="border-3 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 hover:from-purple-50/50 hover:dark:to-cyan-900/20 transition-all duration-500 group">
+          <div class="space-y-4">
+            <div class="inline-block p-4 bg-purple-500/10 dark:bg-cyan-400/10 rounded-full transition-all duration-500 group-hover:rotate-12">
+              <span class="text-4xl">📁</span>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 font-medium animate-pulse">Drag & Drop files here<br>or click to browse</p>
+          </div>
+          <input type="file" id="fileInput" class="hidden" accept="video/*">
         </div>
-      </form>
-    </div>
-  </div>
-  {% endblock %}
-  <!-- BootStrap JS CDN-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+
+        <div id="videoPreview" class="hidden mt-6 rounded-xl overflow-hidden shadow-lg">
+          <video id="preview" controls class="w-full aspect-video rounded-xl"></video>
+        </div>
+
+        <div id="subtitleDropdown" class="hidden mt-6 space-y-2 animate-fade-in">
+          <label class="text-gray-700 dark:text-gray-300 font-medium">Subtitle Language</label>
+          <select id="subtitleLanguage" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-purple-500 dark:focus:border-cyan-400 transition-all duration-300 appearance-none">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+          </select>
+        </div>
+
+        <div id="progressContainer" class="hidden mt-6 space-y-2">
+          <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-purple-500 to-blue-400 dark:from-cyan-400 dark:to-blue-500 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Processing: <span id="progressPercent">0%</span></p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 mt-8">
+          <button id="uploadBtn" class="flex-1 px-6 py-3.5 bg-gradient-to-r from-purple-600 to-blue-500 dark:from-cyan-500 dark:to-blue-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 hover:bg-gradient-to-br">
+            Process Video
+          </button>
+          <button id="downloadBtn" class="hidden flex-1 px-6 py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+            Download Now
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Enhanced drag and drop handlers
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('fileInput');
+    const videoPreview = document.getElementById('videoPreview');
+    const preview = document.getElementById('preview');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.getElementById('progressContainer');
+    const videoURL = document.getElementById('videoURL');
+
+    dropArea.addEventListener('click', () => fileInput.click());
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('bg-indigo-100');
+    });
+    dropArea.addEventListener('dragleave', () => dropArea.classList.remove('bg-indigo-100'));
+    dropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('bg-indigo-100');
+      fileInput.files = e.dataTransfer.files;
+      handleFile(fileInput.files[0]);
+    });
+
+    fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+
+    function handleFile(file) {
+      if (file && file.type.startsWith('video/')) {
+        const url = URL.createObjectURL(file);
+        preview.src = url;
+        videoPreview.classList.remove('hidden');
+        toggleSubtitleDropdown();
+        dropArea.classList.add('border-green-500/30', 'bg-green-50/50');
+        setTimeout(() => dropArea.classList.remove('border-green-500/30', 'bg-green-50/50'), 2000);
+      } else {
+        dropArea.classList.add('border-red-500/30', 'bg-red-50/50');
+        setTimeout(() => dropArea.classList.remove('border-red-500/30', 'bg-red-50/50'), 2000);
+      }
+    }
+
+    ['dragenter', 'dragover'].forEach(event => {
+      dropArea.addEventListener(event, (e) => {
+        e.preventDefault();
+        dropArea.classList.add('border-purple-500', 'scale-[1.02]');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(event => {
+      dropArea.addEventListener(event, (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('border-purple-500', 'scale-[1.02]');
+        if (event === 'drop') handleFile(e.dataTransfer.files[0]);
+      });
+    });
+
+    // Progress animation with real-time updates
+    document.getElementById('uploadBtn').addEventListener('click', function () {
+      if (!fileInput.files.length && !videoURL.value) return;
+
+      progressContainer.classList.remove('hidden');
+      let progress = 0;
+      const animate = () => {
+        progress += Math.random() * 3;
+        if (progress >= 100) {
+          progress = 100;
+          showDownloadButton();
+          setTimeout(() => progressContainer.classList.add('hidden'), 2000);
+        }
+        progressBar.style.width = `${progress}%`;
+        document.getElementById('progressPercent').textContent = `${Math.min(progress, 100).toFixed(1)}%`;
+        if (progress < 100) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    });
+  </script>
 </body>
 
 </html>
