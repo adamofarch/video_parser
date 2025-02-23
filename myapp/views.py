@@ -54,10 +54,10 @@ def index(request):
                 # processing the video asynchronously to reduce the HTTP Request Time
                 save_vid.delay(vid_name, vid_serialized_data)
                 process_vid.delay(vid_path)
-                translate_subs.delay(vid_name, vid_lang)
+                translate_subs.delay(vid_lang, vid_path[:-4] + '.srt')
                 return redirect('success')
 
-    elif 'search_query' in request.GET != '':
+    elif 'search_query' in request.GET:
         if search_form.is_valid():
             query = search_form.cleaned_data['search_query']
             vid_name = request.session.get('video_name')

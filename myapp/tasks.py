@@ -1,5 +1,6 @@
 from celery import shared_task
 import subprocess
+from django.conf import settings
 import os
 from django.core.files.base import ContentFile
 from .utils import object_exists_in_s3, save_subtitles_to_dynamodb
@@ -30,11 +31,10 @@ def save_vid(vid_file_name, serialized_data):
     vid.save()
 
 @shared_task
-def translate_subs(lang, subtitle_path): 
-    print("testing")
+def translate_subs(vid_lang, subtitle_path): 
     input_file = subtitle_path
-    output_file = os.path.join(os.path.join(settings.BASEDIR, 'mediafiles'), subtitle_path[:-4]) + '_translated.srt'
-    target_lang = lang
+    output_file = os.path.join(os.path.join(settings.BASE_DIR, 'mediafiles'), subtitle_path[:-4]) + '_translated.srt'
+    target_lang = vid_lang
     subs = pysrt.open(input_file)
 
     translator = GoogleTranslator(source='auto', target=target_lang)

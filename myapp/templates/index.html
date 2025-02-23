@@ -105,7 +105,7 @@
 
             <div id="subtitleDropdown" class="hidden mt-6 space-y-2 animate-fade-in">
               <label class="text-gray-700 dark:text-gray-300 font-medium">Subtitle Language</label>
-              {{ form.sub_lang }}
+              {{ form.sub_language }}
             </div>
 
             <div id="progressContainer" class="hidden mt-6 space-y-2">
@@ -119,11 +119,9 @@
               <button id="uploadBtn" type="submit" class="flex-1 px-6 py-3.5 bg-gradient-to-r from-purple-600 to-blue-500 dark:from-cyan-500 dark:to-blue-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 hover:bg-gradient-to-br">
                 Process Video
               </button>
-              {% comment %}
               <a href="/mediafiles/{{video_name}}" id="downloadBtn" class="hidden flex-1 px-6 py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
                 Download Now
               </a>
-              {% endcomment %}
             </div>
           </div>
         </form>
