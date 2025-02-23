@@ -73,32 +73,29 @@ def search_in_subtitles(query, video_name):
     
     if not subtitle_path:
         return []
-        
-    # Read subtitle file
-    with open(subtitle_path, 'r', encoding='utf-8') as f:
-        content = f.read().lower()
-    
-    # Split into subtitle blocks
-    subtitle_blocks = content.strip().split('\n\n')
-    
-    for block in subtitle_blocks:
-        lines = block.split('\n')
-        if len(lines) < 3:  # Skip malformed blocks
-            continue
-            
-        index = lines[0]
-        timestamp = lines[1]
-        text = ' '.join(lines[2:])  # Combine all text lines
-        
-        # Case insensitive search
-        if re.search(query, text, re.IGNORECASE):
-            # Get context around the match
-            match_context = {
-                'timestamp': timestamp,
-                'text': text,
-                'index': index
-            }
-            search_results.append(match_context)
+    if query != '':
+        with open(subtitle_path, 'r', encoding='utf-8') as f:
+            content = f.read().lower()
+
+        subtitle_blocks = content.strip().split('\n\n')
+
+        for block in subtitle_blocks:
+            lines = block.split('\n')
+            if len(lines) < 3:  # Skip malformed blocks
+                continue
+
+            index = lines[0]
+            timestamp = lines[1]
+            text = ' '.join(lines[2:])  # Combine all text lines
+
+            if re.search(query, text, re.IGNORECASE):
+                # Get context around the match
+                match_context = {
+                    'timestamp': timestamp,
+                    'text': text,
+                    'index': index
+                }
+                search_results.append(match_context)
     
     return search_results
 

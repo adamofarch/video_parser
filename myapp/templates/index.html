@@ -62,34 +62,34 @@
   </head>
 
   <body class="bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-all duration-500 ease-in-out font-inter">
-    <nav class="sticky top-4 mx-4 backdrop-blur-lg bg-white/50 dark:bg-gray-900/50 p-4 rounded-2xl shadow-xl dark:shadow-cyan-600/20 transition-all duration-500 z-50">
+    <nav class="sticky top-4 mx-4 backdrop-blur-lg bg-white/50 dark:bg-gray-900/50 p-4 rounded-2xl shadow-xl dark:shadow-cyan-600/20 transition-all duration-500 z-50 shadow-blue-500/60">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
         <a href="/" class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-cyan-400 dark:to-blue-300">VideoParser Pro</a>
         <form method="get">
           <div class="flex items-center gap-3 w-full sm:w-auto">
             {{ search_form.search_query }}
-            <button type="submit" class="p-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm hover:shadow-md dark:shadow-cyan-500/60 hover:scale-105 transition-all duration-300">
+            <button type="submit" class="p-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm hover:shadow-md hover:dark:shadow-cyan-500/60 hover:scale-105 transition-all duration-300">
               <span class="text-xl">🔍</span>
-            </button>
-            <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm hover:shadow-md dark:shadow-cyan-500/60 hover:scale-105 transition-all duration-300">
-              <span id="theme-icon" class="text-xl">🌙</span>
             </button>
           </div>
         </form>
+        <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md hover:shadow-md hover:dark:shadow-cyan-500/60 hover:scale-105 transition-all duration-300 hover:shadow-blue-500/70">
+          <span id="theme-icon" class="text-xl">🌙</span>
+        </button>
       </div>
     </nav>
     {% block content %}
     <main class="max-w-3xl mx-auto px-4 py-12">
-      <section class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl dark:shadow-gray-900/30 transition-all duration-500 hover:shadow-3xl hover:dark:shadow-cyan-500/40">
+      <section class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl  transition-all duration-500 hover:shadow-3xl hover:dark:shadow-cyan-500/40 shadow-blue-500/60">
         <div class="text-center mb-10">
-          <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-cyan-400 dark:to-blue-300 mb-4">It's all about subs</h1>
+          <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent dark:from-cyan-400 dark:to-blue-300 mb-4">It's All About Subs</h1>
         </div>
 
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="space-y-6">
             {{ form.vid_url }}
-            <div id="drop-area" class="border-3 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 hover:from-purple-50/50 hover:dark:to-cyan-900/20 transition-all duration-500 group">
+            <div id="drop-area" class="border-3 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 hover:from-purple-200/50 hover:dark:to-cyan-900/20 transition-all duration-500 group hover:scale-105">
               <div class="space-y-4">
                 <div class="inline-block p-4 bg-purple-500/10 dark:bg-cyan-400/10 rounded-full transition-all duration-500 group-hover:rotate-12">
                   <span class="text-4xl">📁</span>
@@ -105,13 +105,7 @@
 
             <div id="subtitleDropdown" class="hidden mt-6 space-y-2 animate-fade-in">
               <label class="text-gray-700 dark:text-gray-300 font-medium">Subtitle Language</label>
-              <select id="subtitleLanguage" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-purple-500 dark:focus:border-cyan-400 transition-all duration-300 appearance-none">
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="it">Italian</option>
-              </select>
+              {{ form.sub_lang }}
             </div>
 
             <div id="progressContainer" class="hidden mt-6 space-y-2">
