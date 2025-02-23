@@ -2,15 +2,33 @@
 
 {% block content %}
 
-<div class="container my-5 text-center">
-  <h1>Search Result:</h1> 
-  <br>
-  <br>
-  {% for result in search_result %}
-    <h1>TimeStamp: {{result.timestamp}}</h1>
-    <h1>Text: {{result.text}}</h1>
-    <h1>Index: {{result.index}}</h1>
-  {% endfor %}
+<div class="container mx-auto my-10 p-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold text-center mb-6">Search Results</h1>
+
+    {% if search_result %}
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-gray-300 dark:border-gray-700">
+                <thead>
+                    <tr class="bg-gray-200 dark:bg-gray-800">
+                        <th class="border border-gray-300 dark:border-gray-700 px-4 py-2">Timestamp</th>
+                        <th class="border border-gray-300 dark:border-gray-700 px-4 py-2">Text</th>
+                        <th class="border border-gray-300 dark:border-gray-700 px-4 py-2">Index</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in search_result %}
+                        <tr class="even:bg-gray-100 dark:even:bg-gray-800">
+                            <td class="border border-gray-300 dark:border-gray-700 px-4 py-2">{{ result.timestamp }}</td>
+                            <td class="border border-gray-300 dark:border-gray-700 px-4 py-2">{{ result.text }}</td>
+                            <td class="border border-gray-300 dark:border-gray-700 px-4 py-2">{{ result.index }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-500 dark:text-gray-400">No results found.</p>
+    {% endif %}
 </div>
 
 {% endblock %}
