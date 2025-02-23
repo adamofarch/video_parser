@@ -7,7 +7,7 @@ This project is a Django-based web application that allows users to upload video
 - **Django**: Web framework for building the application.
 - **Celery**: Asynchronous task queue for processing video files and subtitle extraction.
 - **ccextractor**: Tool for extracting subtitles from video files.
-- **Django Environ**: Library for managing environment variables.
+- **Google Translation**: Library for translating the subtitles to different languages.
 
 ## Features
 
@@ -48,7 +48,7 @@ This project is a Django-based web application that allows users to upload video
    ```sh
    python manage.py runserver
 
-7. **Start the Redis Server according to your system(If using systemd use the command below)** :
+7. **Start the Redis Server according to your system(If using systemd, use the command below)** :
    ```sh
    sudo systemctl start redis 
 
