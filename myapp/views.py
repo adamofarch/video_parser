@@ -53,7 +53,8 @@ def index(request):
                 request.session['video_name'] = vid_name
                 # processing the video asynchronously to reduce the HTTP Request Time
                 save_vid.delay(vid_name, vid_serialized_data)
-                process_vid.delay(vid_path)
+                task = process_vid.delay(vid_path)
+                task.get()
                 translate_subs.delay(vid_lang, vid_path[:-4] + '.srt')
                 return redirect('success')
 

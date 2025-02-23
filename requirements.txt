@@ -32,3 +32,4 @@ yt_dlp
 googletrans
 deep_translator
 pysrt
+django-celery-results

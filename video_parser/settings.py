@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -143,7 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
-# CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = "django-db"
 
 # DYNAMODB = boto3.resource('dynamodb', region_name=AWS_REGION_NAME)
 
