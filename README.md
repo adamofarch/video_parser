@@ -48,7 +48,11 @@ This project is a Django-based web application that allows users to upload video
    ```sh
    python manage.py runserver
 
-7. **Start Celery Worker**:
+7. **Start the Redis Server according to your system(If using systemd use the command below)** :
+   ```sh
+   sudo systemctl start redis 
+
+8. **Start Celery Worker**:
    ```sh
    celery -A video_parser worker -l INFO
 
@@ -69,6 +73,8 @@ This project is a Django-based web application that allows users to upload video
 ## Contributing 
 
 Feel free to open issues or submit pull requests for improvements or bug fixes.
+
+Special thanks to our fellow contributor **[Kajal Pal](https://github.com/KAJALPALLL)**
 
 ## License
 
