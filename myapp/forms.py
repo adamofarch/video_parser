@@ -9,7 +9,8 @@ class Vid_Form(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'class': 'w-full px-5 py-3 rounded-xl bg-white dark:bg-gray-900/50 border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-purple-500 dark:focus:border-cyan-400 focus:ring-2 focus:ring-purple-500/30 dark:focus:ring-cyan-400/30 transition-all duration-300',
             'placeholder': 'Paste video URL here...',
-            'id': 'videoURL'
+            'id': 'videoURL',
+            'type': 'text'
         })
     )
 
@@ -24,9 +25,23 @@ class Vid_Form(forms.ModelForm):
         })
     )
 
+    sub_language = forms.ChoiceField(
+        label='',
+        choices=[
+            ('en', 'English'),
+            ('es', 'Spanish'),
+            ('fr', 'French'),
+            ('de', 'German'),
+            ('it', 'Italian'),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:border-blue-500 dark:focus:border-cyan-400 transition-all duration-300 appearance-none',
+            'id': 'subtitleLanguage',
+        })
+    )
     class Meta:
         model = Vid
-        fields = ['vid_url', 'vid_file']
+        fields = ['vid_url', 'vid_file', 'sub_language']
 
 class search_query_form(forms.Form):
     search_query = forms.CharField(
